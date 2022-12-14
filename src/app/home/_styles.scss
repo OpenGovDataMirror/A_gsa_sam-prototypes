@@ -1,0 +1,29 @@
+// backgound image for hero
+.home-hero {
+  background-color: #D9EBFF;
+  background: linear-gradient(#D9EBFF, #FFFFFF);
+  @media only screen and (min-width: 881px) {
+    background: url("../../assets/img/Slice 1.png") no-repeat;
+    background-size: 100%;
+    background-position: right bottom;
+    background-color: #D9EBFF;
+  }
+}
+
+.sds-list > li {
+  margin-bottom: 0.5rem;
+}
+
+
+// placeholder for video code
+.home-video {
+  @media only screen and (max-width: 600px) {
+    display: flex;
+    flex-direction: column-reverse;
+
+    .video-code {
+      height: 270px !important;
+      width: 100% !important;
+    }
+  }
+}

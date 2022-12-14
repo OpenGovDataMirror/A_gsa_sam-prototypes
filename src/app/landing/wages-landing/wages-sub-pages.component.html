@@ -1,0 +1,25 @@
+<sds-subheader>
+  <!-- =============== BACK BUTTON =============== -->
+  <button id="backbutton" class="sds-button sds-button--circular" aria-label="Back to Wages Home"
+    [routerLink]="['/home/wages']">
+    <usa-icon [icon]="'chevron-left'"></usa-icon>
+  </button>
+
+
+  <!-- =============== TITLE =============== -->
+  <span class="font-heading-lg text-semibold">
+    Wage Determinations
+  </span>
+</sds-subheader>
+<div class="sds-page">
+  <div class="grid-container">
+    <div class="grid-row grid-gap">
+      <div class="tablet:grid-col-auto">
+        <wages-sub-menu></wages-sub-menu>
+      </div>
+      <div class="tablet:grid-col-fill">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

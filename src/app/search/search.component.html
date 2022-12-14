@@ -1,0 +1,147 @@
+<sds-subheader>
+  <!-- =============== BACK BUTTON =============== -->
+  <button class="sds-button sds-button--circular" (click)="back();">
+    <usa-icon [icon]="'chevron-left'"></usa-icon>
+  </button>
+
+  <!-- =============== TITLE =============== -->
+  <span class="font-heading-lg text-semibold margin-right-6">
+    Search
+  </span>
+
+  <!-- =============== SEARCH =============== -->
+  <sds-search name="keyword-search" [(ngModel)]="subheaderSearchModel" (ngModelChange)="search()"
+    [searchSettings]="subheaderSearchSettings">
+  </sds-search>
+  <ng-container subheader-buttons-container>
+    <ul class="sds-button-group--secondary sds-button-group--segmented">
+      <li class="sds-button-group__item">
+        <button class="usa-button" [routerLink]="['/search']">Search</button>
+      </li>
+      <li class="sds-button-group__item">
+        <button class="usa-button usa-button--outline" [routerLink]="['/search/saved-search']">Saved Search</button>
+      </li>
+    </ul>
+  </ng-container>
+
+  <!-- =============== ACTIONS BUTTONS =============== -->
+  <sds-subheader-actions [model]="subheaderActions" (clicks)="log($event)">
+  </sds-subheader-actions>
+</sds-subheader>
+<main>
+  <div class="sds-page">
+    <div class="grid-container">
+      <div class="grid-row grid-gap">
+        <div class="desktop:grid-col-3 tablet-lg:grid-col-12 mobile-lg:grid-col-12 margin-bottom-3">
+          <sds-side-toolbar (responsiveDialog)="onDialogChange($event)"
+            (responsiveView)="onResponsiveViewChange($event)" [responsiveButtonText]="'Advanced Search'">
+            <ng-template #toolbarContent>
+              <div class="sds-card" *ngIf="isMobileMode">
+                <div class="sds-card__header sds-card__header--accent-cool grid-row">
+                  <button id="cancelButton" class="sds-button sds-button--circular sds-button--white"
+                    (click)="onCancelClicked()" aria-label="Cancel Advanced Search">
+                    <usa-icon [icon]="'chevron-left'"></usa-icon>
+                  </button>
+                  <div class="margin-x-auto">
+                    <h2 class="sds-card__title margin-top-1 margin-left-neg-2">Advanced Search</h2>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="sds-card sds-card--collapsible" [ngClass]="{'sds-card--collapsed': !domainExpanded}">
+                <div role="button" class="sds-card__header sds-card__header--action"
+                  [attr.aria-expanded]="domainExpanded" aria-controls="panelBody" tabindex="0"
+                  aria-label="Select Domain" (click)="domainExpanded = !domainExpanded"
+                  (keyup.enter)="domainExpanded = !domainExpanded">
+                  <div class="sds-card__title">Select Domain<br />
+                    <span class="sds-card__subtitle">
+                      {{domain?.text}}
+                    </span>
+                  </div>
+
+                  <div class="sds-card__action sds-card__collapse"></div>
+                </div>
+
+                <div class="sds-card__body sds-card__body--accent-cool" id="panelBody">
+                  <sds-selection-panel [model]="navigationModel" [currentSelection]="initialDomain"
+                    (panelSelected)="onPanelSelection($event)">
+                  </sds-selection-panel>
+                </div>
+              </div>
+
+              <div class="sds-card" *ngIf="domain && domain.children">
+                <div class="sds-card__body sds-card__body--accent-cool">
+                  <sds-sub-panel [model]="domain.children" (subPanelClicked)="subDomainSelected($event)">
+                  </sds-sub-panel>
+                </div>
+              </div>
+
+
+              <div class="sds-card sds-card--collapsible" [ngClass]="{'sds-card--collapsed': !filtersExpanded}">
+                <div class="sds-card__header sds-card__header--action" role="button" tabindex="0"
+                  aria-controls="filtersBody" [attr.aria-label]="'Filter By'" [attr.aria-expanded]="filtersExpanded"
+                  (click)="filtersExpanded = !filtersExpanded" (keyup.enter)="filtersExpanded = !filtersExpanded">
+                  <div class="sds-card__title">Filter By</div>
+                  <div class="sds-card__action sds-card__collapse"></div>
+                </div>
+                <div class="sds-card__body sds-card__body--accent-cool" id="filtersBody">
+                  <sds-filters #filters [advancedFilters]="showAdvancedFilters" [form]="form"
+                    [defaultModel]="defaultFilterModel" [fields]="fields" [model]="filterModel"
+                    (filterChange)="filterChange$.next($event)">
+                  </sds-filters>
+                </div>
+              </div>
+
+              <div class="sds-card" *ngIf="isMobileMode">
+                <div class="sds-card__body sds-card__body--accent-cool">
+                  <button class="usa-button" id="applyButton" aria-label="Apply"
+                    (click)="onApplyFilter()">Apply</button>
+                </div>
+              </div>
+            </ng-template>
+          </sds-side-toolbar>
+        </div>
+        <div class="desktop:grid-col-9 tablet-lg:grid-col-12 mobile-lg:grid-col-12">
+          <search-list-layout #resultList [service]="service" [configuration]="listModel"
+            [isHistoryEnabled]="!responsiveDialog" [enableApiCall]="!responsiveDialog" [customResultsTemplate]="noResultsTemplate">
+            <ng-template #resultContent let-item>
+              <div>
+                <assistance-result *ngIf="item._type == 'assistanceListing'" [model]="item"></assistance-result>
+                <contract-opportunity-result *ngIf="item._type == 'opportunity'" [model]="item">
+                </contract-opportunity-result>
+                <entity-registration-result *ngIf="item._type == 'entity'" [model]="item"></entity-registration-result>
+                <exclusion-result *ngIf="item._type == 'exclusion'" [model]="item"></exclusion-result>
+                <dba-result *ngIf="item._type == 'wdDBRA'" [model]="item"></dba-result>
+                <sca-result *ngIf="item._type == 'wdSCA'" [model]="item"></sca-result>
+                <contract-data-result *ngIf="item._type == 'award'" [model]="item"></contract-data-result>
+                <integrity-result *ngIf="item._type == 'integrity'" [model]="item"></integrity-result>
+              </div>
+            </ng-template>
+          </search-list-layout>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<ng-template #noResultsTemplate>
+  
+  <div class="sds-card sds-card--vertical sds-card--shadowed sds-card--bordered bg-base-lightest">
+    <div class="sds-card__header padding-3">
+        <div class="sds-stack sds-2x">
+            <usa-icon class="sds-stack-icon" [size]="'3x'" [icon]="'circle'"></usa-icon>
+            <usa-icon class="sds-stack-icon" [size]="'2x'" [icon]="'search'"></usa-icon>
+        </div> 
+    </div> 
+    <div class="sds-card__body margin-2"> 
+        <h1 class="sds-card__title">No matches found</h1> 
+          <p>Your search did not return any results for active records.</p> 
+          <p>Would you like to return inactive records in your search results.</p> 
+          <div class="margin-top-3"> 
+              <button class="usa-button usa-button--outline" (click)="addInactiveResults()">Yes</button>
+              <button class="usa-button usa-button--outline" (click)="back()">Go Back</button> 
+          </div> 
+     </div> 
+ </div>
+</ng-template>

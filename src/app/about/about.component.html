@@ -1,0 +1,20 @@
+<main>
+  <div class="grid-container margin-top-3 desktop:margin-top-5 margin-bottom-9">
+    <div class="sds-page">
+      <div class="grid-row grid-gap flex-wrap">
+        <div class="grid-col-12 tablet:grid-col-3">
+          <responsive-sidebar title="Navigate To" [showApply]="false">
+            <div class="sds-card__body sds-card__body--accent-cool" id="panelBody">
+              <sds-selection-panel [model]="selectionPanelModel" [navigateOnClick]="true"
+                (panelSelected)="navigateTo($event)">
+              </sds-selection-panel>
+            </div>
+          </responsive-sidebar>
+        </div>
+        <div class="grid-col-12 tablet:grid-col-9">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

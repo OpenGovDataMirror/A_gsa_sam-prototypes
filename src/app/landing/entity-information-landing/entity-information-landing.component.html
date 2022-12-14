@@ -1,0 +1,40 @@
+<main id="main-content">
+  <div class="grid-container">
+      <landing-hero>
+          <h1>Entity Information</h1>
+          <div>
+            <p class="usa-prose usa-intro">An entity is any person or organization that is registered to do business
+                  with the federal government. You must have an active entity registration in SAM to receive a federal
+                  contract or federal assistance.
+            </p>
+            <splash-alert>
+              <!-- alert behavior encapsulated in a local component -->
+            </splash-alert>
+          </div>
+
+          <landing-search domain="entity-info">
+            <h2>Search Registrations</h2>
+            <p>Enter a Unique Entity ID, CAGE/NCAGE or entity name to start searching.  Click <b>Advanced Search</b> to start searching with the advanced filters.</p>
+          </landing-search>
+
+          <splash-tile landingTile>
+              <!-- This tile moves in mobile, so it's encapsulated in a local component -->
+          </splash-tile>
+
+      </landing-hero>
+
+      <!-- Accordions -->
+      <landing-accordion [items]="accordionContent"></landing-accordion>
+
+
+      <!-- Cards -->
+      <div class="grid-row grid-gap margin-top-8">
+        <!-- reports and data -->
+        <div class="tablet:grid-col" *ngFor="let card of cardContent">
+          <landing-card [title]="card.label">
+            <landing-list [links]="card.links"></landing-list>
+          </landing-card>
+        </div>
+      </div>
+  </div>
+</main>
